@@ -1,5 +1,5 @@
 import { GoalType } from '@prisma/client';
-import { IsString, IsNotEmpty, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEnum, IsInt } from 'class-validator';
 
 export class CreateGoalDto {
   @IsString()
@@ -13,4 +13,8 @@ export class CreateGoalDto {
   @IsEnum(GoalType)
   @IsNotEmpty()
   type: GoalType;
+
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
 }
