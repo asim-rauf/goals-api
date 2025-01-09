@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
 import { GoalsService } from './goals.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateGoalDto } from './dto/update-goal.dto';
@@ -8,26 +8,49 @@ export class GoalsController {
   constructor(private readonly goalsService: GoalsService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createGoalDto: CreateGoalDto) {
-    return this.goalsService.create(createGoalDto);
+  async create(@Body(new ValidationPipe()) createGoalDto: CreateGoalDto) {
+    try {
+      return await this.goalsService.create(createGoalDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Get()
-  findAll() {
-    return this.goalsService.findAll();
+  async findAll() {
+    try {
+      return await this.goalsService.findAll();
+    } catch (error) {
+      return error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.goalsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    try {
+      const goal = await this.goalsService.findOne(+id);
+
+      return goal;
+    } catch (error) {
+      return error;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGoalDto: UpdateGoalDto) {
-    return this.goalsService.update(+id, updateGoalDto);
+  async update(@Param('id') id: string, @Body() updateGoalDto: UpdateGoalDto) {
+    try {
+      return await this.goalsService.update(+id, updateGoalDto);
+    } catch (error) {
+      return error;
+    }
   }
+
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.goalsService.remove(+id);
+    try {
+      return await this.goalsService.remove(+id);
+    } catch (error) {
+      return error;
+    }
   }
 }
