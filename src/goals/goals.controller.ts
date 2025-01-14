@@ -1,16 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, HttpCode } from '@nestjs/common';
 import { GoalsService } from './goals.service';
 import { CreateGoalDto } from './dto/create-goal.dto';
 import { UpdateGoalDto } from './dto/update-goal.dto';
+import { STATUS_CODES } from 'http';
 
 @Controller('goals')
 export class GoalsController {
   constructor(private readonly goalsService: GoalsService) {}
-
+  @HttpCode(201)
   @Post()
   async create(@Body(new ValidationPipe()) createGoalDto: CreateGoalDto) {
     try {
-      return await this.goalsService.create(createGoalDto);
+      await this.goalsService.create(createGoalDto);
+      return {
+        success: true,
+        message: 'Goal created successfully',
+        code: STATUS_CODES.OK
+      };
     } catch (error) {
       return error;
     }
@@ -24,7 +30,14 @@ export class GoalsController {
       return error;
     }
   }
-
+  @Get('user/:userId')
+  async findAllByUserId(@Param('userId') userId: string) {
+    try {
+      return await this.goalsService.findAllByUserId(userId);
+    } catch (error) {
+      return error;
+    }
+  }
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

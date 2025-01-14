@@ -25,6 +25,22 @@ export class TaskService {
       throw new InternalServerErrorException('Failed to retrieve tasks');
     }
   }
+  async findAllByUser(userId: string): Promise<Task[]> {
+    try {
+      return await this.prisma.task.findMany({
+        where: {
+          goal: {
+            userId: userId
+          }
+        },
+        include: {
+          goal: true // You can include goal details if needed
+        }
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve tasks');
+    }
+  }
 
   async findOne(id: number): Promise<Task> {
     try {

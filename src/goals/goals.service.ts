@@ -25,7 +25,15 @@ export class GoalsService {
       throw new HttpException('Failed to retrieve goals', HttpStatus.BAD_REQUEST);
     }
   }
-
+  async findAllByUserId(userId: string): Promise<Goal[]> {
+    try {
+      return this.prisma.goal.findMany({
+        where: { userId }
+      });
+    } catch (error) {
+      throw new HttpException('Failed to retrieve goals for user', HttpStatus.BAD_REQUEST);
+    }
+  }
   async findOne(id: number): Promise<Goal | null> {
     try {
       const goal = await this.prisma.goal.findUnique({

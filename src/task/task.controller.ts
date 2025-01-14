@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { STATUS_CODES } from 'http';
 
 @Controller('task')
 export class TaskController {
@@ -9,12 +10,25 @@ export class TaskController {
 
   @Post()
   create(@Body() createTaskDto: CreateTaskDto) {
-    return this.taskService.create(createTaskDto);
+    try {
+      this.taskService.create(createTaskDto);
+      return {
+        success: true,
+        message: 'Task created successfully',
+        code: STATUS_CODES.OK
+      };
+    } catch (error) {
+      return error;
+    }
   }
 
   @Get()
   findAll() {
     return this.taskService.findAll();
+  }
+  @Get('user/:userId')
+  findAllTasksByUser(@Param('userId') userId: string) {
+    return this.taskService.findAllByUser(userId);
   }
 
   @Get(':id')
